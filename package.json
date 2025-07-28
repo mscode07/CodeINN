@@ -14,6 +14,7 @@
     "@radix-ui/react-slot": "^1.2.2",
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.511.0",
@@ -22,7 +23,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.3.0",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
