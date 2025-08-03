@@ -15,6 +15,16 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { SignUpForm } from "./sign-up-form";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 export function LoginForm({
   className,
@@ -37,8 +47,7 @@ export function LoginForm({
         email,
         password,
       });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
+      if (error) console.log(error.message, "Error while Logging IN");
       router.push("/protected");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
@@ -95,12 +104,41 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link
+              <div>
+                <Dialog>
+                  <DialogTrigger>Sign UP</DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>
+                        <SignUpForm />
+                      </DialogTitle>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+                {/* <Button asChild size="sm" variant={"default"}>
+                  <Link href="/auth/sign-up">Sign up</Link>
+                </Button> */}
+              </div>
+              {/* <Link
                 href="/auth/sign-up"
                 className="underline underline-offset-4"
               >
                 Sign up
-              </Link>
+              </Link> */}
+              <Button
+                className="mt-10 px-36 rounded-2xl"
+                // onClick={handleGoogleSignIn}
+              >
+                {" "}
+                <FaGoogle /> Sign UP with Google{" "}
+              </Button>
+              <Button
+                className="mt-2 px-36 rounded-2xl font-bold"
+                // onClick={handleGithubSignIn}
+              >
+                {" "}
+                <FaGithub /> Sign UP with Github{" "}
+              </Button>
             </div>
           </form>
         </CardContent>
