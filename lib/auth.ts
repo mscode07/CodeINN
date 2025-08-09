@@ -1,118 +1,104 @@
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
-import { useState } from "react";
-import { createClient } from "./supabase/server";
+import bcrypt from "bcrypt";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaClient } from "./prisma";
 
-export function useAuth() {
-  const supabase = createClient();
-  process.env.NEXT_PUBLIC_SUPABASE_URL;
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const prisma = new PrismaClient();
 
-  const [session, setSession] = useState<any>(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isSignUpMode, setIsSignUpMode] = useState(false);
+export const authOptions = {
+  adapter: PrismaAdapter({ prisma }),
+  providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || "",
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "text", placeholder: "" },
+        password: { label: "Password", type: "password", placeholder: "" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email) return null;
+        const { email, password } = credentials;
 
-  const clearError = () => setError(null);
+        const hashedPassword = await bcrypt.hash(credentials.password, 10);
+        const existingUser = await prisma.userTable.findUnique({
+          where: { email },
+        });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    clearError();
-    try {
-      const { error } = await (
-        await supabase
-      ).auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) setError(error.message);
-      console.log("✅ User logged in:", email);
-    } catch (error: any) {
-      console.error("❌ Error logging in:", error);
-    }
-  };
+        if (existingUser) {
+          console.log("User found", existingUser);
+          try {
+            const isValid = await bcrypt.compare(
+              hashedPassword,
+              existingUser.password
+            );
+            if (!isValid) return null;
+          } catch (error) {
+            console.log(error);
+            return null;
+          }
+        }
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    clearError();
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const { error } = await (
-        await supabase
-      ).auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/home`,
-        },
-      });
-      if (error) setError(error.message);
-      console.log("✅ User signed up:", email);
-    } catch (error: any) {
-      setError(error.message);
-      console.error("Error signing up:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        if (!existingUser) {
+          try {
+            console.log("Creating user");
+            const user = await prisma.userTable.create({
+              data: {
+                email,
+                password: hashedPassword,
+                providerID: "1",
+                isPaid: false,
+                isActive: true,
+                isDelete: false,
+                userName: "User",
+                createdAt: new Date(),
+              },
+            });
+            console.log("User created", user);
+            return {
+              id: user.userID,
+              email: user.email,
+            };
+          } catch (error) {
+            console.log(error);
+            return null;
+          }
+        }
 
-  const handleGoogleSignIn = async () => {
-    clearError();
-    try {
-      (await supabase).auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/home`,
-        },
-      });
-    } catch (error: any) {
-      setError(error.message);
-      console.error("Error signing in with Google:", error);
-    }
-  };
-  const handleGithubSignIn = async () => {
-    clearError();
-    try {
-      (await supabase).auth.signInWithOAuth({
-        provider: "github",
-        options: {
-          redirectTo: `${window.location.origin}/home`,
-        },
-      });
-    } catch (error: any) {
-      setError(error.message);
-      console.error("Error signing in with Google:", error);
-    }
-  };
+        return {
+          id: existingUser.userID,
+          email: existingUser.email,
+        };
+      },
+    }),
+  ],
+  secret: process.env.NEXTAUTH_SECRET || "secr3t",
 
-  const signOut = async () => {
-    try {
-      await (await supabase).auth.signOut();
-      setSession(null);
-      setIsLoggedIn(false);
-      setEmail("");
-      setPassword("");
-      window.localStorage.removeItem("supabase.auth.token");
-    } catch (error: any) {
-      setError(error.message);
-      console.error("Error signing out:", error);
-    }
-  };
-
-  return {
-    session,
-    email,
-    password,
-    isLoggedIn,
-    isLoading,
-    error,
-    handleLogin,
-    handleSignUp,
-    handleGoogleSignIn,
-    handleGithubSignIn,
-    clearError,
-    signOut,
-  };
-}
+  callbacks: {
+    async session({ session, token }: any) {
+      if (session?.user && token?.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    async jwt({ token, user }: any) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    },
+    pages: {
+      signIn: "/auth/login",
+      error: "/auth/error",
+    },
+  },
+};
