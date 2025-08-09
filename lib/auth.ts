@@ -47,7 +47,6 @@ export const authOptions = {
             return null;
           }
         }
-
         if (!existingUser) {
           try {
             console.log("Creating user");
@@ -73,7 +72,6 @@ export const authOptions = {
             return null;
           }
         }
-
         return {
           id: existingUser.userID,
           email: existingUser.email,
