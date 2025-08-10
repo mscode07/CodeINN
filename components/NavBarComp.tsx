@@ -1,5 +1,3 @@
-import { Code } from "lucide-react";
-import { ThemeSwitcher } from "./theme-switcher";
 import {
   Dialog,
   DialogContent,
@@ -8,12 +6,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import { SignUpForm } from "./SignUpForm";
 import { Logo } from "./Logo";
-
-// import { getUser, getSession } from "@/lib/auth";
+import { SignUpForm } from "./SignUpForm";
+import { ThemeSwitcher } from "./theme-switcher";
+import { useSession } from "next-auth/react";
 
 export const NavBarComp = () => {
+  const { data: session, status } = useSession();
+  console.log("session", session);
+  console.log("status", status);
   //   const { user } = getUser();
   //   const { session } = getSession();
   return (
@@ -21,10 +22,10 @@ export const NavBarComp = () => {
       <Logo />
       <div className="flex items-center space-x-3">
         <ThemeSwitcher />
-        <div className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-xs text-purple-300 border border-purple-500/30">
+        {/* <div className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-xs text-purple-300 border border-purple-500/30">
           <Dialog>
             <DialogTrigger className="text-black bg-white px-4 py-2 rounded-full">
-              Get Started
+              {status === "authenticated" ? "Dashboard" : "Get Started"}
             </DialogTrigger>
             <DialogContent className="flex items-center justify-center">
               <DialogHeader>
@@ -37,16 +38,7 @@ export const NavBarComp = () => {
               </DialogHeader>
             </DialogContent>
           </Dialog>
-          {/* <div>
-            
-            <Button asChild size="lg" variant={"outline"}>
-              <Link href="/auth/login">Sign in</Link>
-            </Button>
-            <Button asChild size="lg" variant={"default"}>
-              <Link href="/auth/sign-up">Sign up</Link>
-            </Button>
-          </div> */}
-        </div>
+        </div> */}
       </div>
     </header>
   );
