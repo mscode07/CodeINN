@@ -1,10 +1,6 @@
 import { Anthropic } from "@anthropic-ai/sdk";
-// import { TextBlock } from "@anthropic-ai/sdk/resources/messages";
-
 import { defaultPrompt, promptMap } from "../../defaults/basePrompts";
 import { getSystemPrompt } from "../../defaults/prompts";
-// import dotenv from "dotenv";
-// dotenv.config();
 const anthropic = new Anthropic();
 
 export async function POST(req: Request) {
@@ -69,6 +65,7 @@ export async function POST(req: Request) {
             controller.enqueue(encoder.encode(`data: completed\n\n`));
             controller.close();
           });
+
           codeStream.on("error", (error: Error) => {
             console.error("Streaming error:", error);
             controller.enqueue(
@@ -81,8 +78,25 @@ export async function POST(req: Request) {
             );
             controller.close();
           });
+
+          codeStream.on("contentBlock", (delta: any) => {
+            console.log("Content Block", delta);
+            if (delta.type === "text_delta") {
+              controller.enqueue(
+                encoder.encode(
+                  `data: ${JSON.stringify({
+                    type: "code",
+                    data: delta.text,
+                  })}\n\n`
+                )
+              );
+            }
+          });
+
+          codeStream.on("message", (message: any) => {
+            console.log("Message", message);
+          });
         } catch (error) {
-          console.log("Error:", error);
           console.log("Error:", error);
           controller.enqueue(
             encoder.encode(
@@ -109,14 +123,4 @@ export async function POST(req: Request) {
     console.error("Error:", error);
     return new Response("Internal Server Error", { status: 500 });
   }
-
-  // res.writeHead(200, {
-  //   "Content-Type": "text/event-stream",
-  //   "Cache-Control": "no-cache",
-  //   Connection: "keep-alive",
-  //   "Access-Control-Allow-Origin": "*",
-  //   "Access-Control-Allow-Headers": "Cache-Control",
-  // });
-  // if (!userRequest) {
-  //   return res.status(400).json({ error: "Prompt is required" });
 }
