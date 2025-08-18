@@ -42,7 +42,7 @@ export function ThemeToggle() {
         <Moon className="w-4 h-4" />
       </button>
 
-      <button
+      {/* <button
         onClick={() => setTheme("system")}
         className={`p-1.5 rounded ${
           theme === "system"
@@ -52,7 +52,7 @@ export function ThemeToggle() {
         aria-label="System mode"
       >
         <Monitor className="w-4 h-4" />
-      </button>
+      </button> */}
     </div>
   );
 }
