@@ -1,6 +1,8 @@
 import { Code, ArrowLeft, Github, Save } from "lucide-react";
 import { ThemeToggle } from "@/components/ToggleComp";
 import { useRouter } from "next/navigation";
+import { usePromptStore, type FileNode } from "@/app/src/store/promptStore";
+import JSZip from "jszip";
 
 interface HeaderProps {
   projectName: string;
@@ -14,6 +16,47 @@ export default function Header({
   togglePreview,
 }: HeaderProps) {
   const router = useRouter();
+  const { fileStructure, streamedResponse } = usePromptStore();
+  console.log("This is the file structure", fileStructure);
+
+  const handleExport = async () => {
+    console.log("Exporting");
+    const zip = new JSZip();
+
+    const addFilesToZip = (node: FileNode, path = "") => {
+      if (node.type === "file") {
+        zip.file(path + node.name, node.content);
+      } else if (node.type === "folder" && node.children) {
+        const folder = zip.folder(path + node.name);
+        if (folder) {
+          Object.entries(node.children).forEach(([childName, childNode]) => {
+            addFilesToZip(childNode, path + node.name + "/");
+          });
+        }
+      }
+    };
+
+    if (fileStructure && fileStructure.length > 0) {
+      fileStructure.forEach((node) => {
+        addFilesToZip(node);
+      });
+    } else if (streamedResponse) {
+      zip.file("generated-code.txt", streamedResponse);
+    } else {
+      alert("No code to export. Please generate code first.");
+      return;
+    }
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    const url = window.URL.createObjectURL(zipBlob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${projectName || "code-export"}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
     <header className="h-12 dark:bg-dark-100 border-b border-gray-200 dark:border-gray-800 px-4 flex items-center justify-between select-none">
@@ -38,17 +81,14 @@ export default function Header({
         </div>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <button className="btn btn-outline px-3 py-1 text-sm h-8">
+      <div className="flex items-center space-x-10 mr-8">
+        <button
+          onClick={handleExport}
+          className="btn btn-outline px-3 py-1 text-sm h-8"
+        >
           <Save className="h-3.5 w-3.5 mr-1" />
-          Save
-        </button>
-
-        <button className="btn btn-outline px-3 py-1 text-sm h-8">
-          <Github className="h-3.5 w-3.5 mr-1" />
           Export
         </button>
-
         <ThemeToggle />
       </div>
     </header>
