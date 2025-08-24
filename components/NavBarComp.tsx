@@ -28,8 +28,9 @@ export const NavBarComp = () => {
           <BsCurrencyDollar className="text-2xl" />
           </Link>
         </div>         
-        <div className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-xs text-purple-300 border border-purple-500/30">
-          <Dialog>
+          <ThemeSwitcher />
+        {/* <div className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-xs text-purple-300 border border-purple-500/30"> */}
+          {/* <Dialog>
             <DialogTrigger className="text-black bg-white px-4 py-2 rounded-full">
               {status === "authenticated" ? "Dashboard" : "Get Started"}
             </DialogTrigger>
@@ -43,8 +44,8 @@ export const NavBarComp = () => {
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
-          </Dialog>
-        </div>
+          </Dialog> */}
+        {/* </div> */}
       </div>
     </header>
   );
