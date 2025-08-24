@@ -44,7 +44,7 @@ export const NavBarComp = () => {
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
-          </Dialog> */}
+          </Dialog> */} 
         {/* </div> */}
       </div>
     </header>
