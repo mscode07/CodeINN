@@ -1,0 +1,6 @@
+name = "CodeINN"
+compatibility_date = "2024-08-23"
+
+[vars]
+NEXT_PUBLIC_SUPABASE_URL = "https://gxgiucyotlgfagiwesnc.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4Z2l1Y3lvdGxnZmFnaXdlc25jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE3ODYyNzksImV4cCI6MjA2NzM2MjI3OX0.e2LiBwOjiz1wJX3SSql4NgQhn9sVVpOO-_fyiYnmijE"
