@@ -139,6 +139,7 @@ export const parseBoltArtifact = (
           name: folderName,
           type: "folder",
           path: `/${folderName}`,
+          content: "",
           children: [childNode],
         };
         files.push(newFolder);

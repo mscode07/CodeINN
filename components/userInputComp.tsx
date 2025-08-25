@@ -3,14 +3,13 @@ import { parseBoltArtifact } from "@/app/src/store/ParseResponse";
 import { usePromptStore } from "@/app/src/store/promptStore";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Rocket } from "lucide-react";
-import { useSession } from "next-auth/react";
+    // import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const UserInputComp = () => {
   const [promptText, setPromptText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [theme, setTheme] = useState("dark");
+  const [isLoading, setIsLoading] = useState(false); 
   const [streamingStatus, setStreamingStatus] = useState("");
   const [detectedTech, setDetectedTech] = useState("");
 
@@ -29,7 +28,7 @@ export const UserInputComp = () => {
     setStreamedResponse,
     setPanelContent,
   } = usePromptStore();
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
   const router = useRouter();
 
@@ -109,13 +108,13 @@ export const UserInputComp = () => {
                 setPrompt(promptText);
                 setFileStructure(files);
                 setSteps(steps);
-                router.push("/editor", {
-                  state: {
-                    promptText,
-                    code: { generatedCode: accumulatedResponse },
-                    detectedTech,
-                  },
+                const params = new URLSearchParams({
+                  promptText,
+                  code: JSON.stringify({ generatedCode: accumulatedResponse }),
+                  detectedTech: JSON.stringify(detectedTech)
                 });
+                
+                router.push(`/editor?${params.toString()}`);
               } catch (parseError) {
                 console.error("Failed to parse bolt artifact:", parseError);
                 setStreamingStatus("Error: Failed to process generated code");

@@ -5,6 +5,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaClient } from "./prisma";
+import type { JWT } from "next-auth/jwt";
+import type { Session, User } from "next-auth";
 
 const prisma = new PrismaClient();
 
@@ -38,7 +40,7 @@ export const authOptions = {
           console.log("User found", existingUser);
           try {
             const isValid = await bcrypt.compare(
-              hashedPassword,
+              password,
               existingUser.password
             );
             if (!isValid) return null;
@@ -82,13 +84,13 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET || "secr3t",
 
   callbacks: {
-    async session({ session, token }: any) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (session?.user && token?.sub) {
-        session.user.id = token.sub;
+        session.user.name = token.sub;
       }
       return session;
     },
-    async jwt({ token, user }: any) {
+    async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
         token.sub = user.id;
       }

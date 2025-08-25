@@ -8,7 +8,6 @@ import {
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { Logo } from "./Logo";
 import { SignUpForm } from "./SignUpForm";
-import { ThemeSwitcher } from "./theme-switcher";
 import { useSession } from "next-auth/react";
 import { BsCurrencyDollar } from "react-icons/bs";
 import Link from "next/link";
@@ -16,9 +15,7 @@ import Link from "next/link";
 export const NavBarComp = () => {
   const { data: session, status } = useSession();
   console.log("session", session);
-  console.log("status", status);
-  //   const { user } = getUser();
-  //   const { session } = getSession();
+  console.log("status", status); 
   return (
     <header className="relative z-10 w-full py-6 px-6 flex justify-between items-center backdrop-blur-sm bg-white/5 border-b border-white/10">
       <Logo />
