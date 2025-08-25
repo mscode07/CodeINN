@@ -1,8 +1,8 @@
-import { Code, ArrowLeft, Github, Save } from "lucide-react";
-import { ThemeToggle } from "@/components/ToggleComp";
-import { useRouter } from "next/navigation";
 import { usePromptStore, type FileNode } from "@/app/src/store/promptStore";
+import { ThemeToggle } from "@/components/ToggleComp";
 import JSZip from "jszip";
+import { ArrowLeft, Code, Save } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
   projectName: string;
@@ -11,9 +11,7 @@ interface HeaderProps {
 }
 
 export default function Header({
-  projectName,
-  previewVisible,
-  togglePreview,
+  projectName, 
 }: HeaderProps) {
   const router = useRouter();
   const { fileStructure, streamedResponse } = usePromptStore();
@@ -30,7 +28,7 @@ export default function Header({
         const folder = zip.folder(path + node.name);
         if (folder) {
           Object.entries(node.children).forEach(([childName, childNode]) => {
-            addFilesToZip(childNode, path + node.name + "/");
+            addFilesToZip(childNode, path + childName + "/");
           });
         }
       }

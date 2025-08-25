@@ -4,12 +4,11 @@ import { usePromptStore } from "@/app/src/store/promptStore";
 import Editor from "@/components/Editor/Editor";
 import FileExplorer from "@/components/Files/fileExplorer";
 import Header from "@/components/layout/Header";
-import StepsSidebar from "@/components/steps/StepsSidebar";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import Statusbar from "@/components/layout/Statusbar";
-import { ThemeToggle } from "@/components/ToggleComp";
+import StepsSidebar from "@/components/steps/StepsSidebar";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";  
 
 export default function page() {
   const {
@@ -83,7 +82,6 @@ export default function page() {
           previewVisible={previewVisible}
           togglePreview={() => setPreviewVisible(!previewVisible)}
         />
-
         <div className="flex-1 flex overflow-hidden">
           <StepsSidebar
             steps={steps}
@@ -115,7 +113,6 @@ export default function page() {
         </div>
 
         <Statusbar activeFile={activeFile} currentStep={currentStep} />
-        {/* <ThemeToggle /> */}
       </div>
     </div>
   );
