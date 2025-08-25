@@ -1,12 +1,14 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "node prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "pages:build": "npx @cloudflare/next-on-pages build",
+    "pages:dev": "npx @cloudflare/next-on-pages dev"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.57.0",
@@ -48,6 +50,8 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.14",
+    "@cloudflare/workers-types": "^4.20250823.0",
     "@eslint/eslintrc": "^3",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^20",
