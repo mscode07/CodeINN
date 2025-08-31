@@ -1,10 +1,5 @@
 "use client";
-import {
-  Globe,
-  Palette,
-  Play
-} from "lucide-react";
-import { useState } from "react";
+import { Globe, Palette, Play } from "lucide-react";
 // import Link from "next/link";
 // import { Button } from "../components/ui/button";
 // import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -43,7 +38,7 @@ export default function HomeComp() {
 
   // const toggleTheme = () => {
   //   setTheme(theme === "dark" ? "light" : "dark");
-  // }; 
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
@@ -64,7 +59,7 @@ export default function HomeComp() {
           className="absolute top-32 left-10 text-green-400 font-mono text-sm opacity-30"
           style={{ animation: "float 3s ease-in-out infinite" }}
         >
-          &lt;div className="hero"&gt;
+          &lt;div className=&quot;hero&quot;&gt;
         </div>
         <div
           className="absolute top-64 right-16 text-blue-400 font-mono text-sm opacity-30"
@@ -107,7 +102,8 @@ export default function HomeComp() {
             style={{ animation: "fadeIn 1s ease-out 0.6s both" }}
           >
             <p className="text-gray-400 mb-4">
-              Join thousands of creators who've already built amazing websites
+              Join thousands of creators who&apos;ve already built amazing
+              websites
             </p>
             <div className="flex justify-center items-center space-x-8 text-sm text-gray-500">
               <div className="flex items-center">

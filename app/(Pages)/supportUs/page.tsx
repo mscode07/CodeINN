@@ -33,8 +33,13 @@ import {
   ToastTitle,
   ToastViewport,
 } from "@radix-ui/react-toast";
-import { CardElement, Elements, useElements, useStripe } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import {
+  CardElement,
+  Elements,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
+import { loadStripe, StripeCardElementChangeEvent } from "@stripe/stripe-js";
 import { Heart, Zap } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,12 +47,18 @@ import { useEffect, useState } from "react";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-function CheckoutForm({ amount, onSuccess }: { amount: number; onSuccess: () => void }) {
+function CheckoutForm({
+  amount,
+  onSuccess,
+}: {
+  amount: number;
+  onSuccess: () => void;
+}) {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [cardComplete, setCardComplete] = useState(false); 
+  const [cardComplete, setCardComplete] = useState(false);
 
   useEffect(() => {
     const fetchClientSecret = async () => {
@@ -59,7 +70,7 @@ function CheckoutForm({ amount, onSuccess }: { amount: number; onSuccess: () => 
         });
         if (!response.ok) throw new Error("Failed to fetch client secret");
         const { clientSecret } = await response.json();
-        console.log("Client Secret fetched:", clientSecret); 
+        // console.log("Client Secret fetched:", clientSecret);
         setClientSecret(clientSecret);
       } catch (error) {
         console.error("Error fetching client secret:", error);
@@ -76,29 +87,32 @@ function CheckoutForm({ amount, onSuccess }: { amount: number; onSuccess: () => 
       return;
     }
     setIsProcessing(true);
-    
+
     try {
-      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: elements.getElement(CardElement)!,
-        },
-      });
+      const { error, paymentIntent } = await stripe.confirmCardPayment(
+        clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(CardElement)!,
+          },
+        }
+      );
 
       if (error) {
-        console.log("Payment Failed", error.message); 
+        console.log("Payment Failed", error.message);
       } else if (paymentIntent?.status === "succeeded") {
         console.log("Payment Succeeded", paymentIntent);
-        onSuccess(); 
+        onSuccess();
       }
     } catch (error) {
       console.error("Payment processing error:", error);
     } finally {
       setIsProcessing(false);
     }
-  }; 
-  
-  const handleCardChange = (event: any) => {
-    setCardComplete(event.complete); 
+  };
+
+  const handleCardChange = (event: StripeCardElementChangeEvent) => {
+    setCardComplete(event.complete);
   };
 
   return (
@@ -107,14 +121,14 @@ function CheckoutForm({ amount, onSuccess }: { amount: number; onSuccess: () => 
         options={{
           style: {
             base: {
-              color: "#ffffff", 
+              color: "#ffffff",
               fontSize: "16px",
               "::placeholder": {
-                color: "#d1d5db",  
+                color: "#d1d5db",
               },
             },
             invalid: {
-              color: "#ef4444",   
+              color: "#ef4444",
             },
           },
         }}
@@ -136,14 +150,17 @@ export default function SupportPage() {
   const router = useRouter();
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [openToast, setOpenToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState({ title: "", description: "" });
+  const [toastMessage] = useState({
+    title: "",
+    description: "",
+  });
   const [showThankYouDialog, setShowThankYouDialog] = useState(false);
   const [paymentAmount, setPaymentAmount] = useState<number>(0);
 
   const handlePaymentSuccess = () => {
     setPaymentAmount(selectedAmount || 0);
     setShowThankYouDialog(true);
-    
+
     setTimeout(() => {
       router.push("/");
     }, 3000);
@@ -188,8 +205,26 @@ export default function SupportPage() {
                     <DialogTrigger asChild>
                       <Button
                         variant="outline"
-                        onClick={() => setSelectedAmount(amount)} 
-                        className={`bg-${amount === 5 ? "green" : amount === 10 ? "blue" : "purple"}-500/10 hover:bg-${amount === 5 ? "green" : amount === 10 ? "blue" : "purple"}-500/20 text-${amount === 5 ? "green" : amount === 10 ? "blue" : "purple"}-400`}
+                        onClick={() => setSelectedAmount(amount)}
+                        className={`bg-${
+                          amount === 5
+                            ? "green"
+                            : amount === 10
+                            ? "blue"
+                            : "purple"
+                        }-500/10 hover:bg-${
+                          amount === 5
+                            ? "green"
+                            : amount === 10
+                            ? "blue"
+                            : "purple"
+                        }-500/20 text-${
+                          amount === 5
+                            ? "green"
+                            : amount === 10
+                            ? "blue"
+                            : "purple"
+                        }-400`}
                       >
                         ${amount}
                       </Button>
@@ -204,7 +239,10 @@ export default function SupportPage() {
                         </DialogDescription>
                       </DialogHeader>
                       <Elements stripe={stripePromise}>
-                        <CheckoutForm amount={amount} onSuccess={handlePaymentSuccess} />
+                        <CheckoutForm
+                          amount={amount}
+                          onSuccess={handlePaymentSuccess}
+                        />
                       </Elements>
                     </DialogContent>
                   </Dialog>
@@ -215,7 +253,10 @@ export default function SupportPage() {
             <div className="text-center">
               <p className="text-sm text-gray-400">
                 Questions? or share your feedback{" "}
-                <Link href="mailto:codeinn@mscodee.com" className="text-blue-400 underline">
+                <Link
+                  href="mailto:codeinn@mscodee.com"
+                  className="text-blue-400 underline"
+                >
                   Contact US
                 </Link>
               </p>
@@ -238,7 +279,10 @@ export default function SupportPage() {
         <ToastClose />
       </Toast>
 
-      <AlertDialog open={showThankYouDialog} onOpenChange={setShowThankYouDialog}>
+      <AlertDialog
+        open={showThankYouDialog}
+        onOpenChange={setShowThankYouDialog}
+      >
         <AlertDialogContent className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 border border-white/20">
           <AlertDialogHeader className="text-center">
             <div className="flex justify-center mb-4">
@@ -255,7 +299,7 @@ export default function SupportPage() {
           </AlertDialogHeader>
           <div className="py-4">
             <p className="text-center text-gray-400 mb-4">
-              Your support helps us continue building amazing AI-powered tools. 
+              Your support helps us continue building amazing AI-powered tools.
               We truly appreciate your generosity!
             </p>
             <div className="text-center text-sm text-gray-500">

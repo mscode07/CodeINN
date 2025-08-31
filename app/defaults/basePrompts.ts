@@ -47,8 +47,10 @@ export const defaultPrompt = `Project Files:
 index.js:
 console.log('Generic project setup');
 `;
-
-export const promptMap: any = {
+type PromptMap = {
+  [key: string]: string;
+};
+export const promptMap: PromptMap = {
   nextjs: nextBasePrompt,
   react: reactBasePrompt,
   node: nodeBasePrompt,
