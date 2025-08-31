@@ -70,7 +70,7 @@ function CheckoutForm({
         });
         if (!response.ok) throw new Error("Failed to fetch client secret");
         const { clientSecret } = await response.json();
-        console.log("Client Secret fetched:", clientSecret);
+        // console.log("Client Secret fetched:", clientSecret);
         setClientSecret(clientSecret);
       } catch (error) {
         console.error("Error fetching client secret:", error);
