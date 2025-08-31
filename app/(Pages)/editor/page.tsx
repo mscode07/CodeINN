@@ -8,9 +8,9 @@ import Statusbar from "@/components/layout/Statusbar";
 import StepsSidebar from "@/components/steps/StepsSidebar";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";  
+import { useEffect, useState } from "react";
 
-export default function page() {
+export default function Page() {
   const {
     prompt,
     openFiles,
@@ -26,7 +26,7 @@ export default function page() {
 
   const [previewVisible, setPreviewVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
 
   console.log("This is the system theme", theme);
 

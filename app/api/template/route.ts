@@ -1,4 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+import {
+  Message
+} from "@anthropic-ai/sdk/resources/messages";
 import { defaultPrompt, promptMap } from "../../defaults/basePrompts";
 import { getSystemPrompt } from "../../defaults/prompts";
 const anthropic = new Anthropic();
@@ -51,6 +54,7 @@ export async function POST(req: Request) {
             max_tokens: 4096,
             system: getSystemPrompt(),
           });
+
           codeStream.on("text", (text: string) => {
             controller.enqueue(
               encoder.encode(
@@ -58,6 +62,7 @@ export async function POST(req: Request) {
               )
             );
           });
+
           console.log(codeStream, "Reaching here");
 
           codeStream.on("end", () => {
@@ -79,21 +84,7 @@ export async function POST(req: Request) {
             controller.close();
           });
 
-          codeStream.on("contentBlock", (delta: any) => {
-            console.log("Content Block", delta);
-            if (delta.type === "text_delta") {
-              controller.enqueue(
-                encoder.encode(
-                  `data: ${JSON.stringify({
-                    type: "code",
-                    data: delta.text,
-                  })}\n\n`
-                )
-              );
-            }
-          });
-
-          codeStream.on("message", (message: any) => {
+          codeStream.on("message", (message: Message): void => {
             console.log("Message", message);
           });
         } catch (error) {
