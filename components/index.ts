@@ -1,4 +1,4 @@
-import { SignUpForm } from "./SignUpForm";
+import SignUpForm  from "@/components/SignUpForm";
 import { NavBarComp } from "./NavBarComp";
 import { UserInputComp } from "./userInputComp";
 import { HeroComp } from "./HeroComp";
