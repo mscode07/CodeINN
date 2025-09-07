@@ -1,7 +1,10 @@
 import { cn } from "@/lib/utils";
 import { Brain, Terminal, Zap } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function FeaturesComp() {
+  const { data: session, status } = useSession();
+  console.log("FeaturesComp", session?.user?.name);
   const features = [
     {
       title: "AI-Powered Magic",
@@ -27,35 +30,41 @@ export default function FeaturesComp() {
   ];
   return (
     <div>
-      <div
-        className="mt-20 grid gap-8 sm:grid-cols-3"
-        style={{ animation: "fadeIn 1s ease-out 0.4s both" }}
-      >
-        {features.map((feature, index) => (
+      {status === "authenticated" ? (
+        <div></div>
+      ) : (
+        <div>
           <div
-            key={index}
-            className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 hover:transform hover:scale-105"
+            className="mt-20 grid gap-8 sm:grid-cols-3"
+            style={{ animation: "fadeIn 1s ease-out 0.4s both" }}
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative">
+            {features.map((feature, index) => (
               <div
-                className={cn(
-                  "flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-r text-white mb-6 mx-auto shadow-lg",
-                  `bg-gradient-to-r ${feature.gradient}`
-                )}
+                key={index}
+                className="group relative p-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all duration-500 hover:transform hover:scale-105"
               >
-                {feature.icon}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative">
+                  <div
+                    className={cn(
+                      "flex items-center justify-center h-16 w-16 rounded-2xl bg-gradient-to-r text-white mb-6 mx-auto shadow-lg",
+                      `bg-gradient-to-r ${feature.gradient}`
+                    )}
+                  >
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-purple-300 transition-colors duration-300">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-purple-300 transition-colors duration-300">
-                {feature.title}
-              </h3>
-              <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors duration-300">
-                {feature.description}
-              </p>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
