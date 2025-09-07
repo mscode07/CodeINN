@@ -3,15 +3,16 @@ import { parseBoltArtifact } from "@/app/src/store/ParseResponse";
 import { usePromptStore } from "@/app/src/store/promptStore";
 import { cn } from "@/lib/utils";
 import { ArrowRight, Rocket } from "lucide-react";
-    // import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const UserInputComp = () => {
   const [promptText, setPromptText] = useState("");
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
   const [streamingStatus, setStreamingStatus] = useState("");
   const [detectedTech, setDetectedTech] = useState("");
+  const [showAuthPopup, setShowAuthPopup] = useState(false);
 
   const examples = [
     "Create a modern portfolio website with dark mode",
@@ -28,14 +29,23 @@ export const UserInputComp = () => {
     setStreamedResponse,
     setPanelContent,
   } = usePromptStore();
-  // const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const router = useRouter();
 
   const handlePromptSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-
+    console.log("Welcome User:", session?.user?.email || "Guest");
     if (!promptText.trim()) return;
+
+    if (status !== "authenticated") {
+      setShowAuthPopup(true);
+      setTimeout(() => {
+        setShowAuthPopup(false);
+        router.push("/auth/signup");
+      }, 3000);
+      return;
+    }
 
     setIsLoading(true);
     setIsGenerating(true);
@@ -111,9 +121,9 @@ export const UserInputComp = () => {
                 const params = new URLSearchParams({
                   promptText,
                   code: JSON.stringify({ generatedCode: accumulatedResponse }),
-                  detectedTech: JSON.stringify(detectedTech)
+                  detectedTech: JSON.stringify(detectedTech),
                 });
-                
+
                 router.push(`/editor?${params.toString()}`);
               } catch (parseError) {
                 console.error("Failed to parse bolt artifact:", parseError);
@@ -138,6 +148,49 @@ export const UserInputComp = () => {
   };
   return (
     <div>
+      {showAuthPopup && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20 max-w-md mx-4 text-center">
+            <div className="mb-4">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg
+                  className="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Authentication Required
+              </h3>
+              <p className="text-gray-300">
+                Please sign up or log in to generate your website. Redirecting
+                to signup page...
+              </p>
+            </div>
+            <div className="flex items-center justify-center mt-4">
+              <div className="flex space-x-1">
+                <span className="h-2 w-2 bg-purple-400 rounded-full animate-bounce"></span>
+                <span
+                  className="h-2 w-2 bg-purple-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "150ms" }}
+                ></span>
+                <span
+                  className="h-2 w-2 bg-purple-400 rounded-full animate-bounce"
+                  style={{ animationDelay: "300ms" }}
+                ></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="relative bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20">
         <div className="relative">
           <textarea

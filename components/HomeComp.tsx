@@ -1,45 +1,12 @@
 "use client";
 import { Globe, Palette, Play } from "lucide-react";
-// import Link from "next/link";
-// import { Button } from "../components/ui/button";
-// import { ThemeSwitcher } from "@/components/theme-switcher";
-// import {
-//   Dialog,
-//   DialogClose,
-//   DialogContent,
-//   DialogDescription,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogTrigger,
-// } from "@/components/ui/dialog";
-// import { parseBoltArtifact } from "@/app/src/store/ParseResponse";
-// import { AuthButton } from "./auth-button";
 import FeaturesComp from "./FeaturesComp";
 import FooterComp from "./FooterComp";
 import { HeroComp } from "./HeroComp";
 import { NavBarComp } from "./NavBarComp";
 import { UserInputComp } from "./userInputComp";
 
-export default function HomeComp() {
-  // const [promptText, setPromptText] = useState("");
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [theme, setTheme] = useState("dark");
-  // const [streamingStatus, setStreamingStatus] = useState("");
-  // const [detectedTech, setDetectedTech] = useState("");
-
-  // const {
-  //   setPrompt,
-  //   setFileStructure,
-  //   setSteps,
-  //   setIsGenerating,
-  //   setStreamedResponse,
-  //   setPanelContent,
-  // } = usePromptStore();
-
-  // const toggleTheme = () => {
-  //   setTheme(theme === "dark" ? "light" : "dark");
-  // };
-
+export default function HomeComp() { 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
