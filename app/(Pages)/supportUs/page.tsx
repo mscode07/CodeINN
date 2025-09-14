@@ -30,10 +30,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
 const checkoutLinks: Record<number, string> = {
   5: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_MgGcTElqK33n0qeOYjHc3pnXnidjOkdfnFfUF0kcFuE/redirect",
-  10: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_aUHspUTBVW62Q7Y3xJd6oolN5k9VSlTghieOH3qtq6m/redirect",
+  10: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_exP2wIa03asAERMKUiJHa1QLGGBwzwiwoQZNj0exsMw/redirect",
   20: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_Sza6dbkIFokbhFRRjtwlFzCdXxDAzP0F1xTpi46NoNh/redirect",
 };
 
@@ -44,7 +43,6 @@ export default function SupportPage() {
 
   const handleCheckout = (amount: number) => {
     setPaymentAmount(amount);
-
 
     window.open(checkoutLinks[amount], "_blank", "noopener,noreferrer");
   };
