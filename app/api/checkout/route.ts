@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+
+
 import { NextResponse } from "next/server";
 
 const POLAR_BASE = process.env.POLAR_SERVER === "sandbox"

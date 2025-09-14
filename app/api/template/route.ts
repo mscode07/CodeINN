@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { Anthropic } from "@anthropic-ai/sdk";
 import {
   Message
