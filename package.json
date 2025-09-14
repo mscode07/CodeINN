@@ -7,7 +7,7 @@
     "lint": "next lint",
     "seed": "node prisma/seed.ts",
     "postinstall": "prisma generate",
-    "pages:build": "npx @cloudflare/next-on-pages build",
+    "pages:build": "npx @cloudflare/next-on-pages",
     "pages:dev": "npx @cloudflare/next-on-pages dev"
   },
   "dependencies": {
@@ -15,6 +15,8 @@
     "@auth/prisma-adapter": "^2.10.0",
     "@auth/supabase-adapter": "^1.10.0",
     "@monaco-editor/react": "^4.7.0",
+    "@polar-sh/nextjs": "^0.4.6",
+    "@polar-sh/sdk": "^0.34.16",
     "@prisma/client": "^6.13.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -51,8 +53,8 @@
     "zustand": "^5.0.6"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.14",
-    "@cloudflare/workers-types": "^4.20250823.0",
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@cloudflare/workers-types": "^4.20250913.0",
     "@eslint/eslintrc": "^3",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^20",
