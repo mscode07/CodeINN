@@ -1,9 +1,9 @@
+
 export const runtime = "nodejs";
 
+
 import { Anthropic } from "@anthropic-ai/sdk";
-import {
-  Message
-} from "@anthropic-ai/sdk/resources/messages";
+import { Message } from "@anthropic-ai/sdk/resources/messages";
 import { defaultPrompt, promptMap } from "../../defaults/basePrompts";
 import { getSystemPrompt } from "../../defaults/prompts";
 const anthropic = new Anthropic();
