@@ -31,9 +31,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const checkoutLinks: Record<number, string> = {
-  5: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_MgGcTElqK33n0qeOYjHc3pnXnidjOkdfnFfUF0kcFuE/redirect",
-  10: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_exP2wIa03asAERMKUiJHa1QLGGBwzwiwoQZNj0exsMw/redirect",
-  20: "https://sandbox-api.polar.sh/v1/checkout-links/polar_cl_Sza6dbkIFokbhFRRjtwlFzCdXxDAzP0F1xTpi46NoNh/redirect",
+  5: process.env.NEXT_PUBLIC_POLAR_CHECKOUT_5!,
+  10: process.env.NEXT_PUBLIC_POLAR_CHECKOUT_10!,
+  20: process.env.NEXT_PUBLIC_POLAR_CHECKOUT_20!,
 };
 
 export default function SupportPage() {
