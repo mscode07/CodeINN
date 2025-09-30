@@ -1,5 +1,5 @@
 "use client";
-import { Globe, Palette, Play } from "lucide-react";
+//import { Globe, Palette, Play } from "lucide-react";
 import FeaturesComp from "./FeaturesComp";
 import FooterComp from "./FooterComp";
 import { HeroComp } from "./HeroComp";
@@ -102,4 +102,5 @@ export default function HomeComp() {
     </div>
   );
 }
+
 
