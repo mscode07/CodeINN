@@ -1,6 +1,5 @@
 "use client";
 
-import { Palette, Play } from "lucide-react";
 
 import FeaturesComp from "./FeaturesComp";
 import FooterComp from "./FooterComp";
@@ -103,5 +102,6 @@ export default function HomeComp() {
     </div>
   );
 }
+
 
 
