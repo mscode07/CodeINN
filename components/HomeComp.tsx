@@ -1,5 +1,7 @@
 "use client";
+
 import { Palette, Play } from "lucide-react";
+
 import FeaturesComp from "./FeaturesComp";
 import FooterComp from "./FooterComp";
 import { HeroComp } from "./HeroComp";
@@ -72,20 +74,6 @@ export default function HomeComp() {
               Join thousands of creators who&apos;ve already built amazing
               websites
             </p>
-            <div className="flex justify-center items-center space-x-8 text-sm text-gray-500">
-              <div className="flex items-center">
-                {/* <Globe className="h-4 w-4 mr-2 text-green-400" />
-                <span>10k+ websites created</span> */}
-              </div>
-              <div className="flex items-center">
-                <Palette className="h-4 w-4 mr-2 text-purple-400" />
-                <span>100+ templates</span>
-              </div>
-              <div className="flex items-center">
-                <Play className="h-4 w-4 mr-2 text-blue-400" />
-                <span>Ready in 30 seconds</span>
-              </div>
-            </div>
           </div>
         </div>
       </main>
@@ -115,3 +103,5 @@ export default function HomeComp() {
     </div>
   );
 }
+
+
