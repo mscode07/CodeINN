@@ -1,5 +1,5 @@
 "use client";
-import { Globe, Palette, Play } from "lucide-react";
+import { Palette, Play } from "lucide-react";
 import FeaturesComp from "./FeaturesComp";
 import FooterComp from "./FooterComp";
 import { HeroComp } from "./HeroComp";
@@ -50,7 +50,7 @@ export default function HomeComp() {
 
       <NavBarComp />
 
-      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-20">
+      <main className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-20">        
         <div className="max-w-6xl w-full space-y-12 text-center">
           <HeroComp />
           <div
@@ -74,8 +74,8 @@ export default function HomeComp() {
             </p>
             <div className="flex justify-center items-center space-x-8 text-sm text-gray-500">
               <div className="flex items-center">
-                <Globe className="h-4 w-4 mr-2 text-green-400" />
-                <span>10k+ websites created</span>
+                {/* <Globe className="h-4 w-4 mr-2 text-green-400" />
+                <span>10k+ websites created</span> */}
               </div>
               <div className="flex items-center">
                 <Palette className="h-4 w-4 mr-2 text-purple-400" />
