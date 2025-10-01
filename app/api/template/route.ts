@@ -1,25 +1,33 @@
 import { Anthropic } from "@anthropic-ai/sdk";
+
 import {
   Message
 } from "@anthropic-ai/sdk/resources/messages";
 import { defaultPrompt, promptMap } from "../../defaults/basePrompts";
-import { getSystemPrompt } from "../../defaults/prompts";
+import { getSystemPrompt } from "../../defaults/prompts"; 
+import prisma from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { uploadResponseToR2 } from "@/lib/r2";
+
 const anthropic = new Anthropic();
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const userRequest = body.prompt;
-    console.log("This is the user's Request :-", userRequest);
+    const session = await getServerSession(authOptions)
+    const userID = session?.user?.id;
+    const body = await req.json(); 
+    const userRequest = body.prompt; 
     if (!userRequest || typeof userRequest !== "string") {
       return new Response("No prompt provided", { status: 400 });
     }
+     let fullResponse = "";
+
     const stream = new ReadableStream({
       async start(controller) {
         const encoder = new TextEncoder();
 
         try {
-          console.log("Reaching here");
           const response = await anthropic.messages.create({
             messages: [{ role: "user", content: userRequest }],
             model: "claude-3-5-sonnet-20241022",
@@ -32,10 +40,7 @@ export async function POST(req: Request) {
           if (firstContent.type !== "text") {
             throw new Error("Expected text response");
           }
-
-          const techByUser = firstContent.text;
-
-          console.log("Tech by user :-", techByUser);
+          const techByUser = firstContent.text; 
 
           controller.enqueue(
             encoder.encode(
@@ -45,9 +50,6 @@ export async function POST(req: Request) {
 
           const basePrompt = promptMap[techByUser] || defaultPrompt;
           const userMessage = `${basePrompt}\n\nUser Request: ${userRequest}`;
-
-          console.log("User Message :-", userMessage);
-
           const codeStream = anthropic.messages.stream({
             messages: [{ role: "user", content: userMessage }],
             model: "claude-3-5-sonnet-20241022",
@@ -56,6 +58,7 @@ export async function POST(req: Request) {
           });
 
           codeStream.on("text", (text: string) => {
+            fullResponse += text;
             controller.enqueue(
               encoder.encode(
                 `data: ${JSON.stringify({ type: "code", data: text })}\n\n`
@@ -63,9 +66,20 @@ export async function POST(req: Request) {
             );
           });
 
-          console.log(codeStream, "Reaching here");
+          codeStream.on("end", async() => {
+             try {
+              const r2Key = await uploadResponseToR2(userID || "anonymous", "response.json", fullResponse);
 
-          codeStream.on("end", () => {
+              await prisma.userPromptHistoryTable.create({
+                data: {
+                  userID: userID || "",
+                  prompt: userRequest,
+                  r2Key,
+                },
+              });
+            } catch (err) {
+              console.error("❌ Failed to save to R2/DB:", err);
+            }
             controller.enqueue(encoder.encode(`event: end\n`));
             controller.enqueue(encoder.encode(`data: completed\n\n`));
             controller.close();

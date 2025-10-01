@@ -11,7 +11,7 @@ export const NavBarComp = () => {
     signOut();
   };
   return (
-    <header className="relative z-10 w-full py-6 px-6 flex justify-between items-center backdrop-blur-sm bg-white/5 border-b border-white/10">
+    <header className="relative z-10 w-full py-6 px-6 flex justify-between items-center backdrop-blur-sm bg-white/5 ">
       <Logo />
       <div className="flex items-center space-x-3">
           {status==="authenticated"?<div className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-full text-xs text-purple-300 border border-purple-500/30">

@@ -1,11 +1,20 @@
 "use client";
 import { parseBoltArtifact } from "@/app/src/store/ParseResponse";
 import { usePromptStore } from "@/app/src/store/promptStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Rocket } from "lucide-react";
+import { ArrowRight, HistoryIcon, Rocket } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { HistoryComp } from "./history-Comp";
 
 export const UserInputComp = () => {
   const [promptText, setPromptText] = useState("");
@@ -223,7 +232,29 @@ export const UserInputComp = () => {
               >
                 {example}
               </button>
-            ))}
+            ))} 
+
+            <Dialog>
+            <DialogTrigger className="ml-auto px-3 py-1 bg-white/10 hover:bg-white/20 rounded-full text-xs text-gray-300 hover:text-white transition-all duration-200 border border-white/10 hover:border-white/20">
+              <div className="flex items-center gap-2">
+            <HistoryIcon className="w-6 h-6 text-gray-300 hover:text-white cursor-pointer"/>
+            <p>History</p>
+            </div>
+            </DialogTrigger>
+            <DialogContent className="bg-black min-w-96 max-w-96">
+              <DialogHeader>
+                <DialogTitle className="w-full"> 
+                <div className="flex items-center gap-2 mb-4 text-xl">
+                  <HistoryIcon />
+                  <p className="font-bold">History</p>
+                </div>
+                <HistoryComp />
+                </DialogTitle>
+              </DialogHeader>
+              <DialogDescription className=""> 
+              </DialogDescription>
+            </DialogContent>
+          </Dialog> 
           </div>
         </div>
 
