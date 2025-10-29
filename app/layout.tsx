@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Provider } from "./provider";
+import Script from "next/script"; 
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -28,6 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
+       
+        <Script
+          defer
+          data-website-id="dfid_SDXYFpsF3XVr5Xp64l026"
+          data-domain="codeinn.mscodee.com"
+          src="https://datafa.st/js/script.js"
+          strategy="afterInteractive"
+        />
+        
         <Provider>
           <ThemeProvider
             attribute="class"
